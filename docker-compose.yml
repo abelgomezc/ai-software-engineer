@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    ports: ["5434:5432"]
+    environment:
+      POSTGRES_DB: aise
+      POSTGRES_USER: aise
+      POSTGRES_PASSWORD: aise
+    volumes: [pgdata:/var/lib/postgresql/data]
+  backend:
+    build: ./backend
+    ports: ["8083:8083"]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aise
+      SPRING_DATASOURCE_USERNAME: aise
+      SPRING_DATASOURCE_PASSWORD: aise
+      SPRING_AI_OLLAMA_BASE_URL: http://host.docker.internal:11434
+    depends_on: [postgres]
+    volumes: ["/var/run/docker.sock:/var/run/docker.sock"]
+  frontend:
+    build: ./frontend
+    ports: ["5176:80"]
+    depends_on: [backend]
+volumes:
+  pgdata:

@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: ai-software-engineer
+  datasource:
+    url: jdbc:postgresql://localhost:5434/aise
+    username: aise
+    password: aise
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: qwen3:8b
+      embedding:
+        options:
+          model: nomic-embed-text
+
+server:
+  port: 8083
+
+aise:
+  llm:
+    default-model: qwen3:8b
+    engineer-model: qwen3:8b
+    reviewer-model: qwen3:8b
+    embedding-model: nomic-embed-text
+    timeout-seconds: 120
+    max-retries: 2
+  sandbox:
+    allowed-commands: mvn,gradle,java,npm,git,javac,python
+    cpu-limit: 1
+    memory-mb: 1024
+    pids-limit: 256
+    network-enabled: false
+    prep-network-enabled: true
+  limits:
+    max-iterations: 25
+    max-tokens-per-task: 200000
+    command-timeout-seconds: 120
+    task-timeout-seconds: 600
+    tool-output-max-chars: 8000
+    loop-detection-repeat: 3
+  review:
+    max-rounds: 2
+  indexing:
+    enabled: false
+  eval:
+    repo-path: ./eval
